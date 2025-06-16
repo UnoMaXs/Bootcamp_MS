@@ -3,6 +3,7 @@ package com.bootcamp_ms.application;
 import com.bootcamp_ms.domain.api.IBootcampServicePort;
 import com.bootcamp_ms.domain.spi.IBootcampPersistencePort;
 import com.bootcamp_ms.domain.usecase.BootcampUseCase;
+import com.bootcamp_ms.infrastructure.adapters.client.CapacityWebClient;
 import com.bootcamp_ms.infrastructure.adapters.mapper.IBootcampMapper;
 import com.bootcamp_ms.infrastructure.adapters.persistence.BootcampAdapter;
 import com.bootcamp_ms.infrastructure.adapters.repository.IBootcampRepository;
@@ -24,7 +25,8 @@ public class UseCasesConfig {
     }
 
     @Bean
-    public IBootcampServicePort bootcampServicePort(IBootcampPersistencePort bootcampPersistencePort) {
-        return new BootcampUseCase(bootcampPersistencePort);
+    public IBootcampServicePort bootcampServicePort(IBootcampPersistencePort bootcampPersistencePort, CapacityWebClient capacityWebClient) {
+        return new BootcampUseCase(bootcampPersistencePort, capacityWebClient);
     }
+
 }
