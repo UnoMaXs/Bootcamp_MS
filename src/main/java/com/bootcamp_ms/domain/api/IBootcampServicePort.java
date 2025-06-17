@@ -10,6 +10,9 @@ public interface IBootcampServicePort {
 
     Mono<Bootcamp> saveBootcamp(Bootcamp bootcamp);
     Mono<List<BootcampResponseDTO>> findAll(int page, int size, String sortBy, String direction);
+    Mono<Void> deleteBootcamp(Long bootcampId);
+    Mono<Bootcamp> findById(Long id);
+
 
 
 }

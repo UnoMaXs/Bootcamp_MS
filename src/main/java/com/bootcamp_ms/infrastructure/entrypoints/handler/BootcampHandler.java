@@ -42,5 +42,21 @@ public class BootcampHandler {
                 .flatMap(list -> ServerResponse.ok().bodyValue(list));
     }
 
+    public Mono<ServerResponse> deleteBootcamp(ServerRequest request) {
+        Long id = Long.parseLong(request.queryParam("id").orElseThrow(() ->
+                new IllegalArgumentException("El parámetro 'id' es obligatorio")));
+
+        return bootcampServicePort.deleteBootcamp(id)
+                .then(ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> getBootcampById(ServerRequest request) {
+        Long id = Long.parseLong(request.pathVariable("id"));
+
+        return bootcampServicePort.findById(id)
+                .map(bootcampInfraMapper::toBootcampDTO)
+                .flatMap(dto -> ServerResponse.ok().bodyValue(dto))
+                .switchIfEmpty(ServerResponse.notFound().build());
+    }
 
 }

@@ -4,6 +4,7 @@ import com.bootcamp_ms.infrastructure.entrypoints.dto.CapacitySummaryDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -41,4 +42,28 @@ public class CapacityWebClient {
                 .retrieve()
                 .bodyToFlux(CapacitySummaryDTO.class);
     }
+
+    public Flux<Long> getAllTechnologyIdsFromOtherCapacities(List<Long> excludedCapacityIds) {
+        String query = excludedCapacityIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        return webClient.get()
+                .uri(capacityServiceUrl + "/capacity/technologies/used?excludeIds=" + query)
+                .retrieve()
+                .bodyToFlux(Long.class);
+    }
+
+    public Mono<Void> deleteCapacitiesByIds(List<Long> ids) {
+        String query = ids.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+
+        return webClient.method(HttpMethod.DELETE)
+                .uri(capacityServiceUrl + "/capacity/delete?ids=" + query)
+                .retrieve()
+                .bodyToMono(Void.class);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.bootcamp_ms.domain.spi.IBootcampPersistencePort;
 import com.bootcamp_ms.infrastructure.adapters.mapper.IBootcampMapper;
 import com.bootcamp_ms.infrastructure.adapters.repository.IBootcampRepository;
 import lombok.AllArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -30,4 +31,23 @@ public class BootcampAdapter implements IBootcampPersistencePort {
                 .collectList();
     }
 
+    @Override
+    public Mono<Bootcamp> findById(Long id) {
+        return bootcampRepository.findById(id)
+                .map(bootcampMapper::toBootcamp);
+    }
+
+    @Override
+    public Flux<Bootcamp> findAllExcept(Long bootcampId) {
+        return bootcampRepository.findAll()
+                .filter(bootcamp -> !bootcamp.getId().equals(bootcampId))
+                .map(bootcampMapper::toBootcamp);
+    }
+
+    @Override
+    public Mono<Void> deleteBootcampById(Long bootcampId) {
+        return bootcampRepository.deleteById(bootcampId);
+    }
+
 }
+

@@ -9,5 +9,7 @@ server:
 app:
   capacity:
     url: http://localhost:8084
+  technology:
+    url: http://localhost:8083
 
 
