@@ -4,12 +4,22 @@ spring:
     username: ${SPRING_R2DBC_USERNAME}
     password: ${SPRING_R2DBC_PASSWORD}
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/.well-known/jwks.json
+
 server:
   port: ${PORT}
+
 app:
   capacity:
     url: http://localhost:8084
   technology:
     url: http://localhost:8083
+  report:
+    url: http://localhost:8087
 
-
+jwt:
+  secret: ${JWT_SECRET:yP5mL9qB7sT2uH4wF8xG3cV0zA1rE6dM}

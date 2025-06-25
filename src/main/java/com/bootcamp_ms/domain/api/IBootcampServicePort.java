@@ -8,10 +8,12 @@ import java.util.List;
 
 public interface IBootcampServicePort {
 
-    Mono<Bootcamp> saveBootcamp(Bootcamp bootcamp);
-    Mono<List<BootcampResponseDTO>> findAll(int page, int size, String sortBy, String direction);
-    Mono<Void> deleteBootcamp(Long bootcampId);
+    Mono<Bootcamp> saveBootcamp(Bootcamp bootcamp, String token);
+    Mono<List<BootcampResponseDTO>> findAll(int page, int size, String sortBy, String direction, String token);
+    Mono<Void> deleteBootcamp(Long bootcampId, String token);
     Mono<Bootcamp> findById(Long id);
+    Mono<BootcampResponseDTO> findBootcampWithMostPersons(String token);
+
 
 
 

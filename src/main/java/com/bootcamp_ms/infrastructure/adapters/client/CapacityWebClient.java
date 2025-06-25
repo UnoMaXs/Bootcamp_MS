@@ -23,47 +23,56 @@ public class CapacityWebClient {
     @Value("${app.capacity.url}")
     private String capacityServiceUrl;
 
-    public Mono<Map<String, Object>> validateCapacityIds(List<Long> ids) {
-        String queryParam = String.join(",", ids.stream().map(String::valueOf).toList());
+    public Mono<Map<String, Object>> validateCapacityIds(List<Long> ids, String token) {
+        String queryParam = ids.stream().map(String::valueOf).collect(Collectors.joining(","));
 
         return webClient.get()
                 .uri(capacityServiceUrl + "/capacity/ids?ids=" + queryParam)
+                .headers(headers -> headers.setBearerAuth(stripBearer(token)))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {});
     }
 
-    public Flux<CapacitySummaryDTO> getCapacitiesSummaryByIds(List<Long> ids) {
+    public Flux<CapacitySummaryDTO> getCapacitiesSummaryByIds(List<Long> ids, String token) {
         String queryParam = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
         return webClient.get()
                 .uri(capacityServiceUrl + "/capacity/summaries?ids=" + queryParam)
+                .headers(headers -> headers.setBearerAuth(stripBearer(token)))
                 .retrieve()
                 .bodyToFlux(CapacitySummaryDTO.class);
     }
 
-    public Flux<Long> getAllTechnologyIdsFromOtherCapacities(List<Long> excludedCapacityIds) {
+    public Flux<Long> getAllTechnologyIdsFromOtherCapacities(List<Long> excludedCapacityIds, String token) {
         String query = excludedCapacityIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
         return webClient.get()
                 .uri(capacityServiceUrl + "/capacity/technologies/used?excludeIds=" + query)
+                .headers(headers -> headers.setBearerAuth(stripBearer(token)))
                 .retrieve()
                 .bodyToFlux(Long.class);
     }
 
-    public Mono<Void> deleteCapacitiesByIds(List<Long> ids) {
+    public Mono<Void> deleteCapacitiesByIds(List<Long> ids, String token) {
         String query = ids.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(","));
 
         return webClient.method(HttpMethod.DELETE)
                 .uri(capacityServiceUrl + "/capacity/delete?ids=" + query)
+                .headers(headers -> headers.setBearerAuth(stripBearer(token)))
                 .retrieve()
                 .bodyToMono(Void.class);
     }
 
+    private String stripBearer(String token) {
+        return token != null && token.startsWith("Bearer ") ? token.substring(7) : token;
+    }
 
 }
+
+

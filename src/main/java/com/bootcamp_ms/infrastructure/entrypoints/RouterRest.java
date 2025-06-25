@@ -18,6 +18,7 @@ public class RouterRest {
     public RouterFunction<ServerResponse> routerFunction(BootcampHandler bootcampHandler) {
         return route(POST("/bootcamp"), bootcampHandler::saveBootcamp)
                 .andRoute(GET("/bootcamp/list"), bootcampHandler::listBootcamps)
+                .andRoute(GET("/bootcamp/popular"), bootcampHandler::getMostPopularBootcamp)
                 .andRoute(GET("/bootcamp/{id}"), bootcampHandler::getBootcampById)
                 .andRoute(DELETE("/bootcamp/delete"), bootcampHandler::deleteBootcamp);
     }
